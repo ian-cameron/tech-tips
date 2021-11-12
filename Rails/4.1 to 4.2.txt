@@ -1,0 +1,18 @@
+rvm use 2.5
+gem install bundler -v 1.3
+
+gem 'web-console', '~> 2.0' in :development group
+gem 'rails', '4.2.11.3'
+
+(if using ruby >= 2.4)
+  gem 'therubyracer', '0.12.3'
+  gem 'libv8', '3.16.14.15'
+
+find_or_initialize_by_<attribte>(val) is deprecated.  Change to find_or_initialize_by(:attribute => val)
+bundle update rails or bundle _1.3_ update
+rake rails:update
+
+Deprecated passing Active Record objects to .find or .exists?. Call id on the objects first.
+
+If you had any jquery < 1.9 and are using the jquery gem, you might get errors about .live method in the console.  see 
+https://stackoverflow.com/questions/14354040/jquery-1-9-live-is-not-a-function

@@ -1,0 +1,38 @@
+rvm use 1.9.3
+
+Add to Gemfile:
+
+gem 'rails', '3.1.12'
+gem 'mysql2', '0.3.21'
+
+gem 'rake', '0.9.0'
+gem 'rack-cache', '1.2'
+gem 'ffi', '1.0.11'
+gem 'rb-inotify', '~> 0.8.8'
+
+# Needed for the new asset pipeline
+group :assets do
+  gem 'sass-rails',   '~> 3.1.7'
+  gem 'coffee-rails', '~> 3.1.1'
+  gem 'uglifier',     '>= 1.0.3'
+end
+
+# jQuery is the default JavaScript library in Rails 3.1
+gem 'jquery-rails'
+remvove any jquery library from app/assets/javascripts
+
+bundle update rails
+
+rake rails:update
+
+rake rails:upgrade:routes   
+and copy to routes.rb but make sure first line is Rails.application.routes.draw do instead of Event::Application...
+add root :to => 'controller#action' 
+
+application.js
+application.css
+add to layout:
+<%= stylesheet_link_tag "application" %>
+<%= javascript_include_tag "application" %>
+
+change any actionMailer deliver_<template> methods to deliver

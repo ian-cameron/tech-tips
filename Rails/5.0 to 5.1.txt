@@ -1,0 +1,19 @@
+gem 'rails', '5.1.7'
+add gem 'listen' to development group
+remove specific version of web-console
+bundle update rails
+rails app:update
+
+at some point you needed to do
+rails generate formtastic:install
+
+gem "acts-as-taggable-on", '~> 7.0' 
+(if using that gem...)
+rake acts_as_taggable_on_engine:install:migrations
+
+and also change 
+@user_session = UserSession.new(safe_params.to_h) to just @user_session = UserSession.new(safe_params)
+
+
+if you can't start the development server, try removing this last line from environments/development.rb
+     config.file_watcher = ActiveSupport::EventedFileUpdateChecker

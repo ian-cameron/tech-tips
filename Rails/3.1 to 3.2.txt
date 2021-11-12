@@ -1,0 +1,45 @@
+Add to Gemfile:
+
+gem 'rails', '3.2.21'
+group :assets do
+  gem 'sass-rails',   '~> 3.2.6'
+  gem 'coffee-rails', '~> 3.2.2'
+  gem 'uglifier',     '>= 1.0.3'
+end
+
+If you have these gems, check for these versions:
+gem "will_paginate", '~> 3.2.1'
+gem 'mysql2', '~> 0.3.21' 
+gem 'authlogic', '~> 3.2.0'
+
+then run bundle update rails
+
+if you get therubyracer gem error, try adding
+gem 'libv8', '3.16.14.3' 
+then bundle update
+
+if you get an error about thor needing ruby > 2.0 try adding this:
+gem 'thor', '0.15.0'
+
+
+remove /vendor/plugins or make them gems. 
+ or move to /lib:  (rename lib to plugin, move to lib.  rename init.rb to <plugin name> and move to config/initializers.  
+ fix paths in that file eg) "require File.dirname(__FILE__) + '/lib/asset'" -> "require '<pluginname>/asset'"
+
+run rake rails:update and choose which files to do.
+
+if write_inheritable_attribute errors, edit the code to use class_attributes instead of write_inheritable_attribute, i.e.
+
+class_attribute :variable_name
+self.variable_name = value
+
+instead of
+
+write_inheritable_attribute(:variable_name, value)
+
+ActionMailer changes:  recipients are now to.  change to mail to: value, subject: value.  (use : and ,)
+
+This version could support strong paramters, (mass-assignment protection).  You need to set it up sooner or later but if you want to do it now add:
+gem 'strong_parameters'
+and in config/application.rb set config.active_record.whitelist_attributes = false
+and put this in an initializer: ActiveRecord::Base.send(:include, ActiveModel::ForbiddenAttributesProtection)

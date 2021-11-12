@@ -1,0 +1,10 @@
+Backup for export
+
+mysqldump -h 127.0.0.1 -u root -p wordpress > ~/wordpress$(date +"%Y-%m-%d").bak
+
+tar -czvf ~/wordpress$(date +"%Y-%m-%d").tar.gz /usr/share/wordpress
+
+sudo tar -czvf ~/wp-content$(date +"%Y-%m-%d").tar.gz /var/lib/wordpress/wp-content
+
+tar -czvf ~/wpconfig.tar.gz /etc/wordpress/config-default.php /etc/apache2/sites-available/wp.conf
+

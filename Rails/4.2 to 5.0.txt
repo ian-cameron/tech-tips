@@ -1,0 +1,36 @@
+gem 'rails', '5.0.7.2'
+gem 'jquery-rails', '~> 4.0' if its there
+remove gem 'sass-rails'
+add gem 'sassc-rails'
+replace gem 'sprockets' with gem 'sprockets-rails', '~> 2.0'
+remove gem 'protected_attributes' if you had it, and finally fix any attr_protected
+add gem font-awesome-rails, '~> 4.7' if you use it
+bundle update rails
+rake rails:update
+
+add application_record.rb to app/models with:
+     class ApplicationRecord < ActiveRecord::Base
+       self.abstract_class = true
+     end
+and change all your models to inherit from ApplicationRecord
+
+before_filter has been deprecated in Rails 5.0 and removed in 5.1. Use before_action instead
+
+redirect_to :back has been deprecated
+change them to eg) redirect_back :fallback_location => "/"
+
+if you get errors about sprockets manifest:
+create /app/assets/config/manifest.js with this content:
+//= link_tree ../images
+//= link_directory ../javascripts .js
+//= link_directory ../stylesheets .css
+
+
+content_tag_for and div_for have been removed in favor of just using content_tag:
+eg) change <%= div_for item do %> to <%= content_tag :div, item do %>
+or use record_tag_helper gem
+
+In models with polymorphic association, such as belongs_to :imageable, :polymorphic => true
+make sure to add , optional: true
+
+Similarly, the belongs_to relationship is not optional by default in Rails 5 so if you had it optional, must declare optional: true

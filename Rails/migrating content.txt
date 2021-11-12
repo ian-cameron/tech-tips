@@ -1,0 +1,14 @@
+Migrating content
+
+Zip up the system folder from /public:
+tar -cvzf system.tar.gz ./system/
+
+Pull it in from new server
+scp -P <yourport> user@host:web/site/public/system.tar.gz ~/web/site/public/
+
+Extract
+tar -xvzf system.tar.gz -C ./system/
+
+Or use rsync to pull it in from the old server:
+rsync -anv -e "ssh -p <port if not 837>" user@host:path/to/public/system ./system
+(remove the n option to make it live)

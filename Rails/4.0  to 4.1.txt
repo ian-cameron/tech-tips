@@ -1,0 +1,37 @@
+rvm install 2.2 or 2.3
+
+Edit Gemfile, set 'rails' = '4.1.16'
+and gem json, '~> 1.7'
+'bluecloth' = '2.2.0' if it is lower
+'paperclip' = '4.3.7' if it is lower
+'authlogic', '~> 3.7'
+ (then add do_not_validate_attachment_file_type <:data> to each model with has_attached_file)
+ Also specify old style paths and url for has_attached_file for Paperclip if you are migrating old attachments:
+	:path => ":rails_root/public/system/:attachment/:id/:style/:filename", 
+    :url => "/system/:attachment/:id/:style/:filename"
+
+bundle update
+rake rails:update
+
+formtastic hidden inputs, or any with values, no longer use :value => param.  Change to hash :input_html => { :value => ... }
+
+bundler version errors can use bundle _1.3_ install to specify the old version of bundler
+
+change scopes in models to lambdas.  
+before: scope :latest, where("start_date >= ?", Date.today).order("start_date ASC").limit(1)
+after: scope :latest, -> { where("start_date >= ?", Date.today).order("start_date ASC").limit(1) }
+
+change .includes to joins most of the time.  includes no longer explicity joins
+change any :conditions => or conditions: to .where methods
+change :order => or order: to .order methods
+eg)  has_one :homepage, -> { where :active => true}
+
+change any hash acessors from symbols to strings.
+before: APP_CONFIG[:paypal_email]
+after: APP_CONFIG['paypal_email']
+
+If you click on a delete link you may see
+Can't verify CSRF token authenticity. in the console
+if you have link_to with :method => :delete 
+you can change it to button_to
+or just add this to your application layout head:     <%= csrf_meta_tags %>

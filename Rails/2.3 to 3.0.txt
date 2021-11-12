@@ -1,0 +1,39 @@
+Rails 2.3.18 upgrade
+
+git clone
+git branch and checkout
+
+rvm install 1.9.2 
+gem install rake --version 0.8.7
+gem install -v=2.3.18 rails --no-ri --no-rdoc 
+mkdir lib 
+mkdir lib/tasks 
+mv vendor/plugins/*/tasks/*.rake lib/tasks  
+
+
+./script/plugin install git://github.com/aaronchi/jrails.git --force
+rake _0.8.7_ gems:install
+./script/plugin install git://github.com/rails/rails_upgrade.git 
+
+rake _0.8.7_ rails:upgrade:backup
+rake _0.8.7_ rails:upgrade:routes
+rake _0.8.7_ rails:upgrade:gems
+gem install -v=3.0.8 rails --no-ri --no-rdoc  
+rails _3.0.8_ new .  
+Don't overwrite your application controller.  Press d to show diff, n to keep original or <Enter> to overwrite.
+bundle install (fix gems)
+	vpim: https://github.com/rlivsey/vpim/commit/533191ae01c194c81f045fed3c346a8248ffe8ad
+
+
+add config.autoload_paths += %W(#{config.root}/lib) to applciation.rb
+
+add .html_safe to all HTML containing strings.
+
+if you see any pattern like:
+<% yield(:content) || "something" %>
+change it to
+<%= content_for?(:content) ? yield(:content) : "something" %>
+
+replace errors.add_to_base with errors.add :base, 'message'
+
+ActionMailer has completely changed in 3.0.  see .deliver method.  No more body, use mail(), etc...

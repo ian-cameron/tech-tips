@@ -1,0 +1,15 @@
+rvm install 2.5
+
+gem 'rails', '~> 5.2'
+gem 'bootsnap'
+
+remove specific versions of paperclip and authlogic and web-console and mysql2 and rake
+if you have gem rubyzip, remove the  :require => "zip/zip" part
+bundle update
+rails app:update
+
+if development server error:
+comment out *first and last* options of config/initializers/new_framework_defaults.rb
+
+If before you migrate to it you can still get ready for ActiveStorage and if so add the tables now, or else later Rails updates will fail:
+rails active_storage:install

@@ -1,0 +1,114 @@
+3 steps to do this, assuming you have rails ~> 6.1 and paperclip up and running fine and want to migrate it all to activestorage.  They are incompatible with eachother so thats why there are distinct steps.  Essetnialy they are
+
+1) export the paperclip file locations and infomation about which model they are attached to to a CSV file
+2) upgrade all the application code to ActiveStorage and remove paperclip.
+3) use activestorage to attach all the paperclip files in the CSV to the right models and activestorge paths.
+
+Create a file under /lib/tasks/paperclip_to_active_storage.rake
+````
+namespace 'attachments' do
+    task :export => :environment do
+      Rails.application.eager_load!
+      models = ActiveRecord::Base.descendants.reject(&:abstract_class?)
+      # If using polymorphic attachments that aren't detected in the line above, you can just list your classes to migrate from here:
+      # models = [Photo, Website]
+      puts "Task started"
+      filename = "paperclip_attachments.csv"
+      csv_file = CSV.open(filename, "w") do |csv|
+        csv << %w{MODEL ID TYPE URL FILENAME CONTENT_TYPE}
+        models.each do |model|
+          puts "#{model}"
+          attachments = model.column_names.map do |c|
+            if c =~ /(.+)_file_name$/
+              $1
+            end
+          end.compact
+          if attachments.blank?
+            next
+          end
+          model.find_each.each do |instance|
+            attachments.each do |attachment|
+              if instance.send(attachment).path.blank?
+                next
+              end
+              file_name = instance.send("#{attachment}_file_name")
+              url = instance.send(attachment).url
+              content_type = instance.send(attachment).content_type
+              csv << [model.name, instance.id, attachment, url, file_name, content_type]
+              puts "#{model.name}.find(#{instance.id}).#{attachment}.attach(io: File.open('#{url}'), filename: '#{file_name}', content_type: '#{content_type}')"
+            end
+          end
+        end
+      end
+      puts "Saved to #{filename}"
+    end
+    
+    task :import => :environment do
+      Rails.application.eager_load!
+      filename = "paperclip_attachments.csv"
+      CSV.foreach(filename, :headers => true) do |row|
+        command = "#{row['MODEL']}.find(#{row['ID']}).#{row['TYPE']}.attach(io: File.open(\"public#{row['URL']}\"), filename: \"#{row['FILENAME']}\", content_type: '#{row['CONTENT_TYPE']}')"
+        puts command
+        begin
+          eval(command)
+        rescue => ex
+          puts ex.message
+        end
+      end
+    end
+  end
+  `````
+  
+Step 1: Export Paperclip
+
+This is just a rake task.  Run this before you upgrade your code to use activestorage.  It will leave a file called paperclip_export.csv.
+`````
+rake attachments:export RAILS_ENV=development
+`````
+  
+Step 2: Upgrade code to ActiveStorage
+
+add /storage to .gitignore
+This will migrate the database if you haven't already, and changes the code in models and views.  
+rails active_storage:install
+add gem "poppler" if you need to preview PDFs
+add gem "image_processing" if you want to have image resizing
+
+update any models that use paperclip (uses has_attached_file :attachment) to instead be has_one_attached :attachment.
+
+if you had size variants defined with paperclip, you can do them in Views now in the image_tag. 
+variants for images, or just representation for any model.attachment.representation(resize_to_fit: [980,980], convert: :png).processed
+you can access file_size through the byte_size method, and file_name through the filename method of model.attachment
+
+check if a file is attached by model.attachment.attached?
+
+link to a file with <%=link_to @instance.attachment.filename, @instance.attachment %>
+
+get the data from a file with File.open(@instance.attachment.download)
+
+the .processed method calls or creates a preprocessed version.  always use processed in production
+
+the original image URL can be gotten with url_for(instance.attachment)
+Add :attachment to any safe_params in controller.  
+
+If you want to use cloud in production, eg) azure, add 
+gem "azure-storage-blob", require: false to Gemfile
+and add config.active_storage.service = :microsoft to config/environments/production.rb
+uncomment and fill in the chosen provider info in /config/storage.yml
+rails credentials:edit --environment production if you need to add credentials
+
+
+Step 3: Migrate to activestorage.
+In step two, run another rake task to process this exported file and upload the content.
+
+First clean our URL encodings:
+
+sed -i 's/%20/ /g' paperclip_attachments.csv
+sed -i 's/%23/#/g' paperclip_attachments.csv
+sed -i 's/%28/(/g' paperclip_attachments.csv
+sed -i 's/%29/)/g' paperclip_attachments.csv
+
+Then:
+`````
+rake attachments:import RAILS_ENV=development
+`````

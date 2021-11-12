@@ -1,0 +1,68 @@
+## Deploying modern Rails
+
+cd web
+git clone <repo url>
+
+sudo nano /etc/nginx/sites-available/<sitename>.conf
+
+server {
+
+  server_name <yoururl>.<yourdomain>.<tld>;
+  server_name www.<yourdomain>.<tld>;
+  root /home/<user>/web/<sitename>/public;
+
+  passenger_enabled on;
+  passenger_app_env production;
+
+  location /cable {
+    passenger_app_group_name myapp_websocket;
+    passenger_force_max_concurrent_requests_per_process 0;
+  }
+
+  # Allow uploads up to 100MB in size
+  client_max_body_size 100m;
+
+  location ~ ^/(assets|packs) {
+    expires max;
+    gzip_static on;
+  }
+}
+
+sudo ln -s /etc/nginx/sites-available/<sitename>.conf /etc/nginx/sites-enabled/
+
+sudo nginx -t
+sudo service nginx reload
+
+if it gives a 404, maybe you need config.ru in the application root folder with:
+
+# This file is used by Rack-based servers to start the application.
+
+require_relative "config/environment"
+
+run Rails.application
+Rails.application.load_server
+
+
+edit /config/database.yml with
+host: <ur host>
+username: <%= Rails.application.credentials.db[:username] rescue nil %>
+password: <%= Rails.application.credentials.db[:password] rescue nil %>
+
+rails credentials:edit --environment production
+add
+db:
+  username: username
+  password: password
+
+rails db:migrate RAILS_ENV=production
+
+yarn
+
+rails assets:precompile
+
+bin/webpack
+
+touch temp/restart.txt
+
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+

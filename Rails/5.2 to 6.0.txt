@@ -1,0 +1,111 @@
+gem 'rails', '~> 6.0'
+change coffee-rails to '~> 5.0' if it exists
+bundle update
+rails app:update
+
+if you dont use activestorage, delete the migration for it, or else run
+rails db:migrate RAILS_ENV=development
+
+change any <%= render :file =>  into <%= render :template =>  if its not an absolute path
+
+remove any "strings" passed to :if => or :unless => and change to -> { lambdas }
+
+rails 6 is blocking custom hostnames that aren't configured.  So add:
+config.hosts.clear to all environment files, or add strings or regex patterns to a whitelist like 
+config.hosts << /[a-z0-9-]+\.example\.com/
+
+rails deprecated update_attributes methods, so change to update.  It will be removed in rails 6.1
+
+----------------------
+Asset Pipeline / Sprockets -> Webpack
+New way to serve assets is with Webpack.  The default still uses Sprockets for css and images though.
+So to get started using webpack for js, install node, yarn (npm install --global yarn) and set it up as follows:
+
+add 'webpacker' to Gemfile
+bundle install
+bundle exec rails webpacker:install
+
+with webpacker, the JS entrypoint changes from app/assets/javascripts/application.js to app/javascript/packs/application.js.
+
+add polyfills:
+yarn add core-js regenerator-runtime
+
+add to app/javascript/packs/application.js:
+  import "core-js/stable"
+  import "regenerator-runtime/runtime"
+
+javascript_include_tag "application" can be replaced by javascript_pack_tag "application"
+
+if you need jQuery/jQuery-UI, type 
+yarn add jquery jquery-ui-dist
+and add to /config/webpack/environment.js:
+```
+const { environment } = require('@rails/webpacker')
+const webpack = require('webpack');
+environment.plugins.append('Provide', new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery',
+    Popper: ['popper.js', 'default']
+  }))
+
+const aliasConfig = {
+    'jquery': 'jquery/src/jquery',
+    'jquery-ui': 'jquery-ui-dist/jquery-ui.js'
+};
+
+environment.config.set('resolve.alias', aliasConfig);
+module.exports = environment
+```
+
+Then add to app/javascript/packs/application.js:
+require("jquery-ui")
+
+Anything else in the old app/assets/javascripts, you should move to the new  app/javascript/src and refernece them in application.js:
+import "../src/scripts"  (dont add the .js extension)
+
+If you had rails-ujs or even jquery-ujs gems, you can do
+yarn add @rails/ujs
+and add this to applcation.js:
+import Rails from "@rails/ujs"
+global.Rails = Rails
+Rails.start()
+
+If you need to support coffee script:
+put the coffeescript in app/javascript/src/
+rails webpacker:install:coffee
+edit package.json and change "coffee-loader": "^2.0.0" to "1.0.1"
+type yarn to install that lower version.
+require it in application.js like require("../src/scripts.js")
+remove hello_coffee.coffee
+
+Make sure everything else is cleared out of the app/assets/javascript folder or else sprockets will pick it up and interfere with webpacker.
+
+If you used global scope in your old JS, you need to reference any globals with window. becuase webpacker takes over global scope, eg window.variable = this
+
+If you are keeping sprockets for CSS and images, remove this line from app/assets/config/manifest.js:
+ //= link_directory ../javascripts .js
+
+move things from /vendor/assets to /assets/  such as /images/icons, etc. 
+
+--- optional, moving css and images to webpacker and could be problematic ---
+=== USE CAUTION WITH INSTRUCTIONS BELOW THIS LINE ===
+move stylesheet from app/assets/stylesheets => app/javascript/stylesheets
+add to app/javascript/packs/application.js:
+  import "stylesheets/application"
+
+now stylesheet_link_tag "application" can be replaced by stylesheet_pack_tag "application"
+
+move app/assets/images => app/javascript/images
+
+add to app/javascript/packs/application.js:
+ const images = require.context('../images', true)
+ const imagePath = (name) => images(name, true)
+ 
+Then replace any image_tag "foo/bar" to image_pack_tag "foo/bar" in your views and layouts
+
+it doesn't make sense its all under a javasript folder, you can rename that folder:
+mv app/javascript app/frontend
+in config/webpacker.yml:
+  source_path: app/frontend
+  
+remove sass/sassc-rails, uglifier, bootstrap-rails, autoprefixer-rails gems

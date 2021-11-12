@@ -1,0 +1,19 @@
+gem 'rails', '~> 6.1' 
+bundle update rails
+
+rails app:update
+if you didn't ever install activestorage, delete the 3 new migrations related to it that were generated.
+
+rails db:migrate RAILS_ENV=development
+
+any render blocks in views that call views with dots in their name is depreciated.  change 
+<%= render :partial => 'events/datetime.html'
+to
+<%= render :partial => 'events/datetime'
+
+Formtastic gem:
+Add to config/initializers/formtastic.rb:
+Formtastic::FormBuilder.action_class_finder = Formtastic::ActionClassFinder
+Formtastic::FormBuilder.input_class_finder = Formtastic::InputClassFinder
+
+gem 'formtastic', '~> 3.1' or check if 4.0 is out yet

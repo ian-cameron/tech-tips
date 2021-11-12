@@ -1,0 +1,80 @@
+rvm install 2.0 (or use 2.2)
+if you get errors about dotfiles or missing interpreter:
+
+	gem uninstall bundler
+	gem install -v=1.3.0 bundler
+
+Change Gemfile rails to '4.0.13'
+remove assets group, and change the -rails gems to '~> 4.0'
+formtastic and jquery-rails to '>~ 3.0'
+add gem 'therubyracer'
+gem 'sqlite3', '1.3.12'
+gem 'nokogiri', '1.5.5' if present
+remove any gem 'strong_parameters' (and 'thor')
+change cancan to cancancan but know that you need to be at least rails 4.1 before it actually works. 
+
+bundle update rails
+if you get errors, try with ruby 2.5:
+rvm use 2.5 and bundle _1.3.0_ update rails
+if you see errors on dependency versions, use "gem dependency <gem name> --reverse-dependencies"
+
+rake rails:update
+
+routes.rb: change any 'match' to an http method or specify method with via:
+
+remove any caches_action, caches_page, or use gem
+remove expire_page and page caching related things
+
+if you had //= require jquery_ujs add gem 'rails-ujs' and replace with //= require rails-ujs in application.js
+
+change formtastic f.buttons to f.submit
+
+rails 4 does mass assignment protection of parameters.  If you want to skip that, add this to config/initializers:
+
+module ActiveModel
+  module ForbiddenAttributesProtection
+    protected
+      def sanitize_for_mass_assignment(attributes)
+          attributes
+      end
+      alias :sanitize_forbidden_attributes :sanitize_for_mass_assignment
+  end
+end
+
+or else add safe_params to all controllers, eg:
+private
+def safe_params
+	params.require(:model).permit(:column1, :column2...)
+end
+and update the create and update actions to use safe_params
+
+and add gem 'protected_attributes'
+if you want to keep your attribute_accessors, which are also depreciated. 
+
+if you have the gem CanCan, using load_and_authorize_resource, for example, add param_method: :safe_params unless you are following 'rails convention' and naming the safe paramters as <model>_params.
+
+if you used Authlogic in a previous verison, your password won't work anymore unless you do this:
+acts_as_authentic do |c|
+  c.crypto_provider = Authlogic::CryptoProviders::Sha512
+end
+
+if you upgraded a gem acts-as-taggable, '~> 4.0' it needs you to run:
+rake acts_as_taggable_on_engine:install:migrations 
+rake db:migrate
+
+If you used a 'comma separated list' for tags input in a form, rails joins the array with whitespaces you have to do this:
+:input_html => {:value => form.object.tag_list.join(',')} to preserve the commas whilst editing.
+
+if you have a regular expression with ^ and $ and it says unsafe multiline, swap those to \A and \z respectively
+
+Depreciation Warnings:
+Change scopes to lambda functions:
+eg) from default_scope :order => "goal DESC"
+    to default_scope -> { order(:goal => :desc) } 
+
+ :confirm option is deprecated and will be removed from Rails 4.1. Use 'data: { confirm: 'Text' }' instead.
+ 
+ Paperclip >= 4.0 (attachments) need validations of content type or filename or else
+do_not_validate_attachment_file_type :image 
+
+

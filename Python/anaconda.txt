@@ -1,0 +1,14 @@
+Show environments:
+conda info --list
+
+Switch environments:
+conda activate <envname>
+
+Create environment
+conda create --name myclone 
+
+List available packages
+conda list
+
+Install packages
+conda install <packagename>

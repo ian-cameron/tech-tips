@@ -1,0 +1,19 @@
+A long time ago, Latin1 was the defualt character set. 
+
+For exmaple:
+
+mysql> SELECT default_character_set_name FROM information_schema.SCHEMATA S WHERE schema_name = "<dbname>";
++----------------------------+
+| default_character_set_name |
++----------------------------+
+| latin1                     |
++----------------------------+
+1 row in set (0.00 sec)
+
+
+
+Today it should be Utf8mb4
+mysql> alter database <dbname> CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+Then update tables too:
+ALTER TABLE <table_name> CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

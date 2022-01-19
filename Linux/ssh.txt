@@ -1,0 +1,13 @@
+From a client:
+
+Create Key Pair with 
+ssh-keygen (on Linux or Mac)
+pyuttyGen (on Windows)
+
+Copy the public key from: 
+cat ~/.ssh/id_rsa.pub (or from puttyGen on Windows)
+
+On the server paste it into ~/.ssh/authorized_keys on a new line
+
+****
+

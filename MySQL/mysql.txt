@@ -1,0 +1,46 @@
+## MySQL Support
+Use mysqldump to save a database
+```
+mysqldump -h 127.0.0.1 -u username -p  db_name > ~/dumps/dump_file.sql
+```
+if it is an old DB version your UTF8 characters get clobbered, might need to use these options:
+--skip-set-charset --default-character-set=latin1
+
+if you get 'unknown table column_statistics' use the option
+--column-statistics=0
+
+if you want to just export a single table, put it (or several table names) after the db_name in the mysqldump command.
+
+copy the dump to the new server. You could pull it to the new server into a folder named dumps using SCP like this
+```
+scp -P <port> <user>@<remote host>:<remote path>/<dump file name>.sql dumps/
+```
+
+To restore it, first create the new database with mysqlcli if necessary then restore the dump to the new database
+```
+mysql -h <host> -u <username> -p
+mysql> create database <new db name>;
+mysql> quit;
+Bye
+```
+next, restore the dumped database
+```
+mysql -h <host> -u <username> -p --default-character-set=utf8 <new db name> < ~/dumps/<dump file name>.sql
+```
+
+## Allow root login (ubuntu 20.04)
+sudo mysql -u root
+mysql> use mysql;
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'new_password';
+mysql> quit;
+
+## Reset password
+sudo service mysql stop
+export MYSQLD_OPTS="--skip-networking --skip-grant-tables"
+sudo service mysql start
+mysql -u root
+mysql> flush privileges;
+mysql> use mysql;
+mysql> ALTER USER  'root'@'localhost' IDENTIFIED BY 'the-new-password';
+mysql> quit;
+sudo service mysql restart

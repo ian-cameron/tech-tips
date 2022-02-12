@@ -10,6 +10,7 @@ if you get 'unknown table column_statistics' use the option
 --column-statistics=0
 
 if you want to just export a single table, put it (or several table names) after the db_name in the mysqldump command.
+if you want to export some data from a table, use --where "column > 123" after the table
 
 copy the dump to the new server. You could pull it to the new server into a folder named dumps using SCP like this
 ```

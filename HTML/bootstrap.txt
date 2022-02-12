@@ -1,0 +1,12 @@
+Upgrading from 3 to 5:
+
+Some nice Find and Replace tricks:
+ "label label-" to "badge bg-" then perhaps "bg-warning" to "bg-warning text-dark"
+ "panel" to "card"
+ "panel-heading" to "card-header"
+ "panel-title" to "card-title"
+ "panel-body" to "card-body"
+ "help-block" to "form-text"
+  input type="checkbox" to input type="checkbox" class="form-check-input"
+  input type="radio" to input type="radio" class="form-check-input"
+  "input-group-addon" to "input-group-text"

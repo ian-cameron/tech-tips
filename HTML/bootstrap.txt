@@ -10,3 +10,9 @@ Some nice Find and Replace tricks:
   input type="checkbox" to input type="checkbox" class="form-check-input"
   input type="radio" to input type="radio" class="form-check-input"
   "input-group-addon" to "input-group-text"
+
+dl-horizontal is not a thing anymore, so style them with grid:
+    <dl class="dl-horizontal"> becomes <dl class="row">
+    <dt> becomes <dt class="col-md-4">
+    <dd> becomes <dd class="col-md-8">
+    

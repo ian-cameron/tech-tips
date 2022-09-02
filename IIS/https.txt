@@ -1,0 +1,17 @@
+## Forcing https at the server level
+
+Make sure you have certificates for all hosts.  I use LetsEncrypt and winACMEv2 https://github.com/win-acme/win-acme/releases
+Install URL Rewrite module from https://www.iis.net/downloads/microsoft/url-rewrite
+
+Open the module and choose Add Rule(s)..
+Select Blank Rule
+Pattern to match is (.*)
+Expand 'Conditions' tab
+Click Add...
+Condition Input is {HTTPS}
+Matches the Pattern is ^OFF$
+Click OK
+Expand 'Action' tab
+Type is Redirect
+Redirect URL is https://{HTTP_HOST}{REQUEST_URI}
+Click Apply

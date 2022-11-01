@@ -6,6 +6,7 @@
 
 Create a file under /lib/tasks/paperclip_to_active_storage.rake
 ````
+require 'csv'
 namespace 'attachments' do
     task :export => :environment do
       Rails.application.eager_load!
@@ -71,6 +72,7 @@ Step 2: Upgrade code to ActiveStorage
 add /storage to .gitignore
 This will migrate the database if you haven't already, and changes the code in models and views.  
 rails active_storage:install
+rake db:migrate
 add gem "poppler" if you need to preview PDFs
 add gem "image_processing" if you want to have image resizing
 

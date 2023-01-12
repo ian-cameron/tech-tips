@@ -1,0 +1,2 @@
+Telnet client:
+Open powershell and run the commandtelnet Enable-WindowsOptionalFeature -Online -FeatureName TelnetClient

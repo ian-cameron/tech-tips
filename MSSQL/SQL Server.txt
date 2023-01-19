@@ -1,0 +1,2 @@
+If you moved a database .mdf file around, you may lose the NTFS permissions for SQL Service.  The database will show up as (Pending Recovery) and you'll get errors if you try and run any operations on the database in SSMS.   It is a hidden windows account.  
+So add the SQL Server Service Account back to the .mdf file permissions by checking names on local machine for "NT SERVICE\MSSQLSERVER" and add it with Full Control

@@ -1,0 +1,3 @@
+ASP.NET apps running on IIS have an easy way to show "under costruction" pages.  Any time a file named app_offline.htm is present in the site root, it gets displayed instead of the ASP app.  A nice example is https://github.com/yrshaikh/App-Offline-Html-Template
+
+See: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/app-offline?view=aspnetcore-7.0

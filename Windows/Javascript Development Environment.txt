@@ -20,7 +20,7 @@ Install VS Code as admin
 Install nvm-windows https://github.com/coreybutler/nvm-windows/releases and click nvm-setup.exe as admin
 	customize root location to C:\nvm\
 	customize the symlink location to C:\nvm\active\nodejs
-Edit the users PATH environment variable.  Add %NVM_ROOT% and %NVM_SYMLINK%
+Edit the users PATH environment variable.  Add %NVM_HOME% and %NVM_SYMLINK%
 
 open a command prompt
 type "mkdir c:\nvm\active"

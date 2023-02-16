@@ -1,0 +1,44 @@
+Javascript Developer Setup
+
+The request is to have users able to change their node version and develop javascript under their limited privilege accounts.  The tools we use are
+VS Code
+Node.js (Windows Specific Version of NVM)
+Github Desktop
+
+Logged in as admin user:
+
+Remove Existing Node (paraphrased from https://stackoverflow.com/questions/20711240/how-to-completely-remove-node-js-from-windows)
+Uninstall Node.js from add/remove programs
+rmdir /S %AppData%\npm
+rmdir /S %AppData%\npm-cache
+Check %PATH% environment variable (System and end user) to ensure no references to Nodejs or npm exist.
+
+Logged in as end user:
+
+Install GitHub Desktop as admin
+Install VS Code as admin
+Install nvm-windows https://github.com/coreybutler/nvm-windows/releases and click nvm-setup.exe as admin
+	customize root location to C:\nvm\
+	customize the symlink location to C:\nvm\active\nodejs
+Edit the users PATH environment variable.  Add %NVM_ROOT% and %NVM_SYMLINK%
+
+open a command prompt
+type "mkdir c:\nvm\active"
+
+nvm install lts
+nvm use (latest version from previous command) eg nvm use 18.14.0
+
+Verify as end user:
+
+Open command prompt:
+nvm install latest
+nvm use (output of latest version, eg 19.6.0)
+
+Dev environment test as end user:
+Open VS Code, go to View->Terminal and type "npm version"
+Go to a project and type npm install and npm run start, if there is a Windows Firewall Warning, click allow and type in the end user's credentials
+
+references: 
+https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows
+https://github.com/coreybutler/nvm-windows/issues/58
+https://stackoverflow.com/questions/9546324/adding-a-directory-to-the-path-environment-variable-in-windows

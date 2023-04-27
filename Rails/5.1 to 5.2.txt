@@ -11,5 +11,11 @@ rails app:update
 if development server error:
 comment out *first and last* options of config/initializers/new_framework_defaults.rb
 
+Passing string to be evaluated in :if and :unless conditional options is not supported.
+convert to lambdas:
+    validate :parent_doc_privilege, unless: "parent_doc_id.nil?"
+  becomes
+    validate :parent_doc_privilege, unless: -> { parent_doc_id.nil? } 
+
 If before you migrate to it you can still get ready for ActiveStorage and if so add the tables now, or else later Rails updates will fail:
 rails active_storage:install

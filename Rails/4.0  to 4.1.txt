@@ -9,6 +9,7 @@ and gem json, '~> 1.7'
  Also specify old style paths and url for has_attached_file for Paperclip if you are migrating old attachments:
 	:path => ":rails_root/public/system/:attachment/:id/:style/:filename", 
     :url => "/system/:attachment/:id/:style/:filename"
+version 3 style is ":rails_root/public/system/:class/:attachment/:id_partition/:style/:filename"
 
 bundle update
 rake rails:update

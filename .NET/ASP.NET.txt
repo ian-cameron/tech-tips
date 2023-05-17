@@ -1,0 +1,3 @@
+Publising a project has so many language resource folders.  If you dont want these generated every time you publish, edit the .csproj and add the following line in <PropertyGroup>:
+
+<SatelliteResourceLanguages>en</SatelliteResourceLanguages>

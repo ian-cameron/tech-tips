@@ -48,7 +48,7 @@ namespace 'attachments' do
       Rails.application.eager_load!
       filename = "paperclip_attachments.csv"
       CSV.foreach(filename, :headers => true) do |row|
-        command = "#{row['MODEL']}.find(#{row['ID']}).#{row['TYPE']}.attach(io: File.open(\"public#{row['URL']}\"), filename: \"#{row['FILENAME']}\", content_type: '#{row['CONTENT_TYPE']}')"
+        command = "#{row['MODEL']}.find(#{row['ID']}).#{row['TYPE']}.attach(io: File.open(\"public#{row['URL'].gsub(/\?\d+/,"")}\"), filename: \"#{row['FILENAME']}\", content_type: '#{row['CONTENT_TYPE']}')"
         puts command
         begin
           eval(command)

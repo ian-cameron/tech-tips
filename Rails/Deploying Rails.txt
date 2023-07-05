@@ -60,6 +60,9 @@ yarn
 
 rails assets:precompile
 
+If that fails with webpacker not found, run 
+    bundle exec rails webpacker:install 
+
 bin/webpack
 
 touch temp/restart.txt

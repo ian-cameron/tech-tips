@@ -10,5 +10,5 @@ Extract
 tar -xvzf system.tar.gz -C ./system/
 
 Or use rsync to pull it in from the old server:
-rsync -anv -e "ssh -p <port if not 837>" user@host:path/to/public/system ./system
+rsync -anv -e "ssh -p <port if not 837>" user@host:path/to/public/system ./public
 (remove the n option to make it live)

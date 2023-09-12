@@ -13,7 +13,8 @@ mysql> SELECT default_character_set_name FROM information_schema.SCHEMATA S WHER
 
 
 Today it should be Utf8mb4
-mysql> alter database <dbname> CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+mysql> ALTER DATABASE <dbname> CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 Then update tables too:
-ALTER TABLE <table_name> CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+mysql> USE <dbname>;
+mysql> ALTER TABLE <table_name> CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

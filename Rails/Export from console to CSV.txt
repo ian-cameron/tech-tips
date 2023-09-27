@@ -1,0 +1,10 @@
+Generic way to include all columns as headers to the CSV
+
+require 'csv'
+file = "#{Rails.root}/public/exported_data.csv"
+items = Model.order(:created_at)  # Add where conditions if needed
+CSV.open(file, 'w', write_headers: true, headers: Model.new.attributes.keys) do |writer|
+  items.each do |item|
+    writer << item.attributes.values
+  end
+end

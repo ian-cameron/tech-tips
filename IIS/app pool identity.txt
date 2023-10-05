@@ -2,4 +2,6 @@ When hosting a site on IIS, the code runs as a local user created for the applic
 
 Scenario:  Your site stores data in a folder, or downloads files from there.  The account the 
 application pool runs under needs filesystem permissions to access the folder.
-Edit permissions and add "IIS AppPool\<pool name>"https://stackoverflow.com/questions/2283937/how-should-i-ethically-approach-user-password-storage-for-later-plaintext-retrie?rq=1
+Edit permissions and add "IIS AppPool\<pool name>"
+
+https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities

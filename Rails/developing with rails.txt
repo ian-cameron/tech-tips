@@ -1,0 +1,2 @@
+need to run 'ruby bin/webpack-dev-server' to bundle assets
+if command not found, run 'yarn install --check-files'

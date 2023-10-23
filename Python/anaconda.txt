@@ -1,5 +1,5 @@
 Show environments:
-conda info --list
+conda info --envs
 
 Switch environments:
 conda activate <envname>

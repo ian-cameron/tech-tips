@@ -1,0 +1,25 @@
+Rails 7 requires Ruby 2.7.0 or newer
+
+rvm get stable
+
+if it failes try:
+  rvmsudo rvm cleanup all
+  rvm fix-permissions
+
+then
+rvm install 3.2.2
+
+gem 'rails', '~> 7.0' 
+bundle update rails
+
+rails app:update
+
+remove activestorage migrations if you aren't using it.
+
+The big thing is that webpacker is no longer required,  hope you didn't spend too much time
+updating to use webpack with 6.0.  Now you can use sprokets and
+
+button_to helper will use a PATCH method, if you need to preserve a post you can explicity add it:
+button_to("Do a POST", my_action_on_workshop_path(@workshop), method: :post)
+
+activestorage image variants processor is now vips by default and has different syntax.  you can keep mini_magick though

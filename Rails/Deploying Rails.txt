@@ -28,6 +28,9 @@ server {
   }
 }
 
+you can use a different ruby version by specifying it in the server block, eg)
+passenger_ruby /home/<user>/.rvm/gems/ruby-3.2.2/wrappers/ruby;
+
 sudo ln -s /etc/nginx/sites-available/<sitename>.conf /etc/nginx/sites-enabled/
 
 sudo nginx -t
@@ -65,7 +68,7 @@ If that fails with webpacker not found, run
 
 bin/webpack
 
-touch temp/restart.txt
+touch tmp/restart.txt
 
 sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
 

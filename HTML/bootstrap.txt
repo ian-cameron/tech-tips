@@ -15,4 +15,11 @@ dl-horizontal is not a thing anymore, so style them with grid:
     <dl class="dl-horizontal"> becomes <dl class="row">
     <dt> becomes <dt class="col-md-4">
     <dd> becomes <dd class="col-md-8">
+
+btn-default isn't a think anymore, closest is btn-secondary or btn-outline-secondary
+
+For alerts that are .alert-dismissible, add .fade and .show and then replace:
+<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+with
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     

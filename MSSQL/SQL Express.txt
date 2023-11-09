@@ -1,0 +1,18 @@
+
+Expired certificate or missing.
+A connection was successfully established with the server, but then an error occurred during the login process. (provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)
+The certificate chain was issued by an authority that is not trusted.   
+
+Open Powershell as Administrator
+New-SelfSignedCertificate -CertStoreLocation Cert:\LocalMachine\My -DnsName <<COMPUTERNAME>> -KeySpec KeyExchange -FriendlyName SQLCert
+where you change <<COMPUTERNAME>> to your computer
+
+Go to mcc.msc, Add Snap-in, Certificates... Local Computer. Look under Personal for FriendlyName SQLCert.  Export it.
+Go to Trust Root Certificates and import the one you Exported above.
+
+SQL Server Configuration Manager -> C:\Windows\SysWOW64\SQLServerManager14.msc  where the number is SQL Server version.
+Right click Protocols under SQL Server Network Configuration, go to Certificates tab.  Choose SQLCert.
+
+Under SQL SErvices, edit SQLEXPRESS and change Log on as: to Built-in account: Local Systenm
+
+Change connection string to match <<COMPUTERNAME>>

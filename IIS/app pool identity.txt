@@ -5,3 +5,19 @@ application pool runs under needs filesystem permissions to access the folder.
 Edit permissions and add "IIS AppPool\<pool name>"
 
 https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities
+
+When using .NET Core you want to avoid Ephemeral Key Storage eg)
+warn: Microsoft.AspNetCore.DataProtection.Repositories.EphemeralXmlRepository[50]
+      Using an in-memory repository. Keys will not be persisted to storage.
+warn: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[59]
+      Neither user profile nor HKLM registry available. Using an ephemeral key repository. Protected data will be unavailable when application exits.
+warn: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[35]
+      No XML encryptor configured. Key {3e4277bf-c314-4763-b7a8-0a092f684eec} may be persisted to storage in unencrypted form.
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+
+To get around that, the AppPool needs an Advanced Setting under
+    Process Model -> Load User Profile: 'true'
+
+Then it will default to storing key in 
+C:\Users\<AppPool User>\AppData\Local\ASP.NET\DataProtection-Keys

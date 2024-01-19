@@ -7,8 +7,20 @@ conda activate <envname>
 Create environment
 conda create --name myclone 
 
+Create environment with specific version
+conda create --name myenv python=3.10.0
+
 List available packages
 conda list
 
 Install packages
 conda install <packagename>
+
+Install from a requirements.txt
+conda install --file requirements.txt
+
+Change python version
+conda install python=3.9
+
+upgrade anaconda
+conda upgrade -n base

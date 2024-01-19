@@ -1,2 +1,8 @@
 need to run 'ruby bin/webpack-dev-server' to bundle assets
 if command not found, run 'yarn install --check-files'
+
+Rails Console - 
+Show pretty output when inspecting models with YAML:
+y Model.last.attributes
+or
+puts Model.last.attributes.to_yaml

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+        }
+        
+        canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .centered {
+            position: fixed;
+            font-size: x-large;
+            z-index: 2;
+            top: 13.37%;
+            left: 50%;
+            width: 100%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #0F0;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 100px;
+            background: linear-gradient(rgba(0, 251, 3, .29) 13%, 23%, rgba(5, 5, 5, 1) 53%, rgba(17, 241, 113, 0));
+        }
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(1px);
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="overlay"></div>
+    <div class="centered">
+        <h1 id="url">enable javascript</h1>
+    </div>
+    <canvas id="c"></canvas>
+    <script type="text/javascript">
+        document.getElementById('url').textContent = window.location.href;
+        var c = document.getElementById("c");
+        var ctx = c.getContext("2d");
+        c.height = window.innerHeight;
+        c.width = window.innerWidth;
+        var matrix = "гдёжзийклмноптфхцчшщъыьэюяБГДЕЁЖЗИЙКЛМНПСУЦЧШЩЪЫЬЭЮЯ" +
+             "!@#$%^*()_+?:{}|~-=[];,./" +
+             "110101001010101001010101001110101010101011010001010010100010010010101000101010010x01010x0xxxxxxx10101x" +
+             "█▓▒░▀▄▌▐■□▢▣▤▥▦▧▨▩▪▫▬▭▮▯▰▱◆◇◈◉◊○◌◍◎●◐☠☥☦☧☨☩☪☫☬☭☡☢☣";
+             // ◑◒◓◔◕◖◗◘◙◚◛◜◝◞◟◠◡◢◣◤◥◦◧◨◩◪◫◬◭◮◯◰◱◲◳◴◵◶◷◸◹◺◻◼";
+             //◽◾◿☀☁☂☃☄★☆☇☈☉☊☋☌☍☎☏☐☑☒☓☔☕☖☗☘☙☚☛☜☝☞☟☠☡☢☣☤☥☦☧☨☩☪☫☬☭☮☯☰☱☲☳☴☵☶☷☸☹☺☻☼☽☾☿♀♂♃♄♅♆♇♈♉♊♋♌♍♎♏♐♑♒♓♔♕♖♗♘♙♚♛♜♝♞♟♠♡♢♣♤♥♦♧♨♩♪♫♬♭♮♯♰♱♲♳♴♵♶♷♸♹♺♻♼♽♾♿⚀⚁⚂⚃⚄⚅⚆⚇⚈⚉⚊⚋⚌⚍⚎⚏⚐⚑⚒⚓⚔⚕⚖⚗⚘⚙⚚⚛⚜⚝⚞⚟⚠⚡⚢⚣⚤⚥⚦⚧⚨⚩⚪⚫⚬⚭⚮⚯⚰⚱⚲⚳⚴⚵⚶⚷⚸⚹⚺⚻⚼⚽⚾⚿⛀⛁⛂⛃⛄⛅⛆⛇⛈⛉⛊⛋⛌⛍⛎⛏⛐⛑⛒⛓⛔⛕⛖⛗⛘⛙⛚⛛⛜⛝⛞⛟⛠⛡⛢⛣⛤⛥⛦⛧⛨⛩⛪⛫⛬⛭⛮⛯⛰⛱⛲⛳⛴⛵⛶⛷⛸⛹⛺⛻⛼⛽⛾⛿";
+        matrix = matrix.split("");
+        var font_size = 23;
+        var columns = c.width/font_size;
+        var drops = [];
+
+        for(var x = 0; x < columns; x++)
+            drops[x] = 1; 
+
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.04)";
+            ctx.fillRect(0, 0, c.width, c.height);
+
+            ctx.fillStyle = "#0F0";
+            ctx.font = font_size + "px 'Lucida Console', 'Courier New', monospace";
+            for(var i = 0; i < drops.length; i++) {
+                var text = matrix[Math.floor(Math.random()*matrix.length)];
+                if(text === '☠') {
+                    ctx.fillStyle = "#F00";
+                } else {
+                    ctx.fillStyle = "#0F0";
+                }
+                ctx.fillText(text, i*font_size, drops[i]*font_size);
+                if(drops[i]*font_size > c.height && Math.random() > 0.975)
+                    drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 43);
+    </script>
+</body>
+</html>

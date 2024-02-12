@@ -1,0 +1,22 @@
+This is when you export a key from Windows and its a in a pfx format, but you want a .crt and .key to put into nginx
+(domain.tld will be your domain)
+
+Get domain cert:
+    openssl pkcs12 -in domain.tld.pfx -clcerts -nokeys -out domian.tld.crt
+Get the certification authority (CA) bundle:
+    openssl pkcs12 -in domain.tld.pfx -cacerts -out bundle.crt
+Combine them into a chain certificate:
+    cat domain.tld.crt bundle.crt > domain.tld.chained.crt
+
+Private key (2 steps):
+    openssl pkcs12 -in domain.tld.pfx -nocerts -out domain.tld.encrypted.key
+    openssl rsa -in domain.tld.encrypted.key -out domain.tld.key
+
+Now you can install them and set the permissions.
+    sudo mv domain.tld.chained.crt /etc/ssl/private
+    sudo mv domain.tld.key /etc/ssl/private
+    sudo chmod 600 /etc/ssl/private/domain.tld.chained.crt
+    sudo chmod 600 /etc/ssl/private/domain.tld.key
+    sudo chown root:root /etc/ssl/private/domain.tld.chained.crt
+    sudo chown root:root /etc/ssl/private/domain.tld.Key
+

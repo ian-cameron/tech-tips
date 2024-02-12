@@ -11,3 +11,7 @@ On the server paste it into ~/.ssh/authorized_keys on a new line
 
 ****
 
+Consider adding this to /etc/ssh/sshd_conf to keep your sessions alive:
+# Keep alive ssh connections by sending a packet every 2 minutes.
+ClientAliveInterval 120
+

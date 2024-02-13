@@ -89,6 +89,7 @@ move things from /vendor/assets to /assets/  such as /images/icons, etc.
 
 --- optional, moving css and images to webpacker and could be problematic ---
 === USE CAUTION WITH INSTRUCTIONS BELOW THIS LINE ===
+=== After Rails 7 there is a better way, so its best to stay on Sprokets for now! ===
 move stylesheet from app/assets/stylesheets => app/javascript/stylesheets
 add to app/javascript/packs/application.js:
   import "stylesheets/application"

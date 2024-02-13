@@ -1,0 +1,57 @@
+Webpacker, a rails JS bundler that uses Webpack, was requied in Rails 6. 
+It made things complicated for simple use cases.  After Rails 7, we can
+get away from Webpacker and use 'jsbundling-rails' gem, which could still 
+use Webpack if you needed, it but for apps with only a sprinkling of JS we
+need something simple.  This is esbuild.  This will describe how to rip out
+Webpacker and simplify.  (One thing webpacker had was HOT MODULE RELOADING so
+with a plain esbuild if you edit .js you will need to do a page refresh again.)
+
+gem 'jsbundling-rails'
+bundle install
+rails javascript:install:esbuild
+
+This creates app/assets/builds which is where bundles will live
+It also creates a ./bin/dev script which will help you run a dev server 
+to watch .js files for changes and rebundle them during development.
+
+It should add a build script to your package.json, such as:
+"scripts": { "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds"  }
+if it didn't or you skiped it, add it manually.
+
+Webpacker made you swap in  'javascript_pack_tag' but now you get to go back
+to 'javascript_include_tag'
+
+The new entry point is app/javascript/application.js, so move it and eveyrthing else over from 
+the app/javascript/packs/.
+
+Change any requires() to imports:
+eg)
+require("@rails/ujs").start()
+becomes
+import Rails from “@rails/ujs”
+Rails.starts()
+
+You can delete:
+./bin/webpack
+./bin/webpack-dev-server
+./config/initializers/webpacker.rb
+./config/webpacker.yml
+./config/webpack/*
+./config/webpack/*
+./config/webpack/*
+./config/webpack/*
+
+remove gem 'webpacker' from Gemfile
+remove webpacker from package.json: yarn remove @rails/webpacker webpack-dev-server
+
+jQuery (if required)
+create app/javascript/jquery.js:
+
+import jquery from "jquery"
+window.jQuery = jquery
+window.$ = jquery
+
+and add to application.js:
+import "./jquery"
+
+If you had global variables with webpacker, you had to change window to global.window.

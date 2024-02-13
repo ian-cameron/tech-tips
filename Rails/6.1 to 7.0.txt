@@ -16,10 +16,22 @@ rails app:update
 
 remove activestorage migrations if you aren't using it.
 
-The big thing is that webpacker is no longer required,  hope you didn't spend too much time
-updating to use webpack with 6.0.  Now you can use sprokets and
-
 button_to helper will use a PATCH method, if you need to preserve a post you can explicity add it:
 button_to("Do a POST", my_action_on_workshop_path(@workshop), method: :post)
 
 activestorage image variants processor is now vips by default and has different syntax.  you can keep mini_magick though
+
+-----------------------------------------------------------
+The big thing is that webpacker is no longer required,  hope you didn't spend too much time
+updating to use webpacker with 6.0.  Now you can use sprokets or its successor propshaft.
+
+There is a gem for 'cssbundling-rails'
+Run ./bin/bundle add cssbundling-rails
+Run ./bin/rails css:install:[tailwind|bootstrap|bulma|postcss|sass]
+
+when developing, start .bin/dev in another window to watch for css changes.
+
+or keep using sprokets.  its not included in Rails 7, you need to add to Gemfile:
+gem 'sprockets-rails'
+
+(For javascipt bundling, see the file 'Webpacker to esbuild')

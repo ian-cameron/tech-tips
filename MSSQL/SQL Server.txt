@@ -2,3 +2,8 @@ If you moved a database .mdf file around, you may lose the NTFS permissions for 
 So add the SQL Server Service Account back to the .mdf file permissions by checking names on local machine for "NT SERVICE\MSSQLSERVER" and add it with Full Control
 
 in SSMS you can server explorer -> Server Objects -> Linked Servers you can add another server then query databases on that server as SERVER.Database.dbo.Table
+
+Format a query in SSMS the easy way without 3rd party tool:
+1) Ctrl+A  (Select query text)
+2) Ctrl+Shift+Q (Open in query editor)
+3) Enter (Save, and it will be saved as formatted)

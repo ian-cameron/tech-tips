@@ -24,3 +24,8 @@ conda install python=3.9
 
 upgrade anaconda
 conda upgrade -n base
+
+List Channel priorities
+conda config --get
+or
+conda config --show channels

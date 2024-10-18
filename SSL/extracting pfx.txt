@@ -1,6 +1,8 @@
 This is when you export a key from Windows and its a in a pfx format, but you want a .crt and .key to put into nginx
 (domain.tld will be your domain)
 
+the pfx will have a passcode you need to enter at each step here:
+
 Get domain cert:
     openssl pkcs12 -in domain.tld.pfx -clcerts -nokeys -out domian.tld.crt
 Get the certification authority (CA) bundle:
@@ -11,6 +13,12 @@ Combine them into a chain certificate:
 Private key (2 steps):
     openssl pkcs12 -in domain.tld.pfx -nocerts -out domain.tld.encrypted.key
     openssl rsa -in domain.tld.encrypted.key -out domain.tld.key
+
+or
+
+Private key (1 step):
+    openssl pkcs12 -in domain.tld.pfx -nocerts -nodes -out domain.tld.key
+
 
 Now you can install them and set the permissions.
     sudo mv domain.tld.chained.crt /etc/ssl/private

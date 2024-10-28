@@ -30,6 +30,14 @@ sed -i 2,7975 filename
 ```
 * backup a disk
 ```tar -cvpzf backup.tar.gz --exclude=/backup.tar.gz --one-file-system / ```
+* find files modifed in past 2 days:
+```
+find . -mtime -2 -type f
+```
+* delete any .htaccess files modified in the last 2 days:
+```
+find . -mtime -2 -type f -n .htaccess -delete
+```
 
 ## One time things for new server
 * timezone
@@ -39,6 +47,7 @@ sudo timedatectl set-timezone America/Los_Angeles
 
 ```
 mkdir ~/.ssh && chmod 700 ~/.ssh && touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
-then create a key pair with puttyGen, save private key file, copy full public key, and paste it to ~/.ssh/authorized_keys file.
+```
+Then create a key pair with puttyGen, save private key file, copy full public key, and paste it to ~/.ssh/authorized_keys file.
 then in PuTTY under SSH->Auth, browse for the private key file.
 ```

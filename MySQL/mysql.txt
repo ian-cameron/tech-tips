@@ -1,5 +1,6 @@
 ## MySQL Support
-Use mysqldump to save a database
+Use mysqldump to save a database, prompt for the password.  if you want to put the passowrd in the command, (insecure) you can use --password[=password], -p[password]
+If you use the short option form (-p), you cannot have a space between the option and the password. If you omit the password value following the --password or -p option on the command line, you are prompted for one.
 ```
 mysqldump -h 127.0.0.1 -u username -p  db_name > ~/dumps/dump_file.sql
 ```

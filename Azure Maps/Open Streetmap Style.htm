@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+ <html>
+ <head>
+     <title></title>
+
+     <meta charset="utf-8">
+
+     <!-- Ensures that Internet Explorer and Edge uses the latest version and doesn't emulate an older version -->
+     <meta http-equiv="x-ua-compatible" content="IE=Edge">
+
+     <!-- Ensures the web page looks good on all screen sizes. -->
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+     <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
+     <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css" type="text/css">
+     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
+
+
+     <script type="text/javascript">
+        var map, osmTileLayer;
+        // OSM layer icon
+        const dataUri = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCAyNSAyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJibGFjayIgZHk9Ii4zZW0iPk9TTTwvdGV4dD4KPC9zdmc+Cg==';
+        
+         function InitMap()
+         {
+             map = new atlas.Map('myMap', {
+                 center: [-122.33, 47.6],
+                 zoom: 12,
+                 language: 'en-US',
+                 style: 'blank',
+                 authOptions: {
+                     authType: 'subscriptionKey',
+                     subscriptionKey: 'Your Azure Maps Key'
+                 }
+             });
+
+             map.events.add('ready', function () {
+                console.log("map ready");
+                 map.controls.add(new atlas.control.ZoomControl(), {
+                     position: 'top-right'
+                 });
+                // Add style selector
+                map.controls.add(new atlas.control.StyleControl({mapStyles: ['road','osm']}));
+                
+             });
+
+             map.events.add('load', function () {
+                console.log("map loaded");
+                // Add OSM tile layer
+                osmTileLayer = new atlas.layer.TileLayer({
+                    tileUrl: 'https://{subdomain}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    subdomains: ['a', 'b', 'c'],
+                    tileSize: 256
+                },'osm');
+                map.layers.add(osmTileLayer);
+
+                map.events.add('styledata', function (e) {
+                // Hide OSM style when map style is changed
+
+                    var style = map.getStyle().style;
+                    console.log(`Map style changed to ${style}`);
+                    if (!['osm','blank'].includes(style) && map.getLayers().includes(osmTileLayer.id)) {
+                        map.layers.remove(osmTileLayer);
+                        document.getElementById('osm-btn').setAttribute('aria-current', 'false');
+                    }
+                    else {
+                        console.log("assume its OSM time")
+                        document.querySelector('span.azure-map-copyright-context').textContent = 'Copyright Open Street Map and Contributors';
+                    }
+                });
+
+                // Create OSM button
+                var osmButton = `<button aria-label="OSM" type="button" id="osm-btn" class="azure-maps-control-button" aria-current="false">
+                    <img src="${dataUri}" alt="OSM" />
+                    <div class="selected-icon"></div></button>
+                    <span class="tooltiptext edge win" style="transform: translate(72px, 38px); display: block;">Open Street Map</span>`;
+                
+                // Add OSM button
+                document.querySelector('div.style-options').insertAdjacentHTML('beforeend', osmButton);
+                // Set as active
+                document.querySelector('button.curr-style img').src = dataUri;
+                document.getElementById('osm-btn').setAttribute('aria-current', 'true');
+
+                // Add click event to OSM button
+                document.getElementById('osm-btn').addEventListener('click', function (e) {
+                    let target = e.currentTarget;
+                    map.setStyle({ style: 'blank' }); // use blank style
+                    map.layers.add(osmTileLayer); // add the OSM basemap
+                    // Set aria-current to false for all other styles
+                    target.closest('div').querySelectorAll('.azure-maps-control-button').forEach(element => {
+                      element.setAttribute('aria-current', (element !== target ? 'false': 'true')); 
+                    });                 
+
+                    // set control icon 
+                    var currentStyleButton = document.querySelector('button.curr-style img').src = dataUri;
+                });
+            });
+         }
+     </script>
+
+     <style>
+         html, body {
+             margin: auto;
+         }
+
+         #myMap {
+             height: 80vh;
+             width: 80vw;
+         }
+     </style>
+ </head>
+ <body onload="InitMap()">
+     <div id="myMap"></div>
+ </body>
+ </html>

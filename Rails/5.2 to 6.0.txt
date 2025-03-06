@@ -1,4 +1,4 @@
-gem 'rails', '~> 6.0'
+gem 'rails', '~> 6.0.0'
 change coffee-rails to '~> 5.0' if it exists
 bundle update
 rails app:update

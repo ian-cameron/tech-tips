@@ -1,7 +1,7 @@
 Webpacker, a rails JS bundler that uses Webpack, was requied in Rails 6. 
 It made things complicated for simple use cases.  After Rails 7, we can
 get away from Webpacker and use 'jsbundling-rails' gem, which could still 
-use Webpack if you needed, it but for apps with only a sprinkling of JS we
+use Webpack if you needed, but for apps with only a sprinkling of JS we
 need something simple.  This is esbuild.  This will describe how to rip out
 Webpacker and simplify.  (One thing webpacker had was HOT MODULE RELOADING so
 with a plain esbuild if you edit .js you will need to do a page refresh again.)
@@ -31,6 +31,8 @@ becomes
 import Rails from “@rails/ujs”
 Rails.starts()
 
+change any import ../src/scripts.js to import ./src/scripts.js
+
 You can delete:
 ./bin/webpack
 ./bin/webpack-dev-server
@@ -54,4 +56,16 @@ window.$ = jquery
 and add to application.js:
 import "./jquery"
 
+^ this is important if you need $.fn.jQuery to be available in other scripts.  Hoisting will not let you combine the import in one file.
+
+or add it directly to application.js
+
 If you had global variables with webpacker, you had to change window to global.window.
+
+Have a relatively newer version of npm.  For rails 7 you need npm --version > 7.1
+npm install -g npm@7.1
+
+or update node to 20
+$ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+
+Then run npm install

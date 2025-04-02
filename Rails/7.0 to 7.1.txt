@@ -1,0 +1,4 @@
+This one was the smoothest.
+Just add gem 'rails', '~> 7.1'
+Run `bundle update`
+Then run rails app:update

@@ -1,0 +1,41 @@
+Remove some gems using the following:
+
+bundle remove sprockets
+bundle remove sprockets-rails
+bundle remove sass-rails
+
+Delete the config/assets.rb and assets/config/manifest.js files from your project.
+
+If you are Rails < 8 you'll need to comment out any calls to config.assets, such as in environments/development.rb:
+  # Suppress logger output for asset requests.
+  # config.assets.quiet = true
+
+if you want to use a bundler, it is cssbundling-rails
+
+add gem cssbundling-rails to the Gemfile
+bundle install
+run ./bin/rails css:install:sass
+(This configures a node script in package.json to bundle and compress your sass and css stylesheets.)
+Remake your /assets/stylesheet/application.saas.scss 
+change //=requires into @import for things in the tree
+You can add other files you'll see when you run
+`rake assets:reveal`
+That will show vendored css files from gems, and everything else on your asset paths.  
+To use those from a gem, if they are css files, you can directly do it with 
+eg) @import url(formtastic.css);
+however this will cause it to be a separate request, not bundled with cssbundling-rails.
+If you want to bundle in gem styles, add some rails code to copy the style from your gemset.  for example:
+add to /config/initializers/assets.rb:
+    formtastic_path = Gem.loaded_specs['formtastic'].full_gem_path
+    source = File.join(formtastic_path, 'app/assets/stylesheets/formtastic.css')
+    destination = Rails.root.join('app/assets/builds/')
+    FileUtils.cp(source, destination)
+Then in your application.sass.scss put @use "../builds/formtastic";
+or if there's other CSS you require from a node package, you'd need to copy it to /assets/build for example add to package.json:
+    "build:css:fontawesome": "cp -r ./node_modules/@fortawesome/fontawesome-free/webfonts ./app/assets/builds && sass ./app/assets/stylesheets/fontawesome.scss ./app/assets/builds/fontawesome.css --no-source-map --load-path=node_modules --quiet"
+
+To add CSS compression(minification), edit package.json and add to the build:css script "--style=compressed"
+To minify the JS bundle add --minify to the esbuild command in package.json
+
+gem install foreman
+get used to starting ./bin/dev instead of rails -s, which will start both a css and js hot reloader and rails server!

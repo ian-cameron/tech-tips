@@ -19,10 +19,17 @@ find . -mindepth 2 -type f -exec zip -9 -jyr 'export.zip' '{}' \;
 ```
 ls -lAR | grep -v '^d' | awk '{total += $5} END {print "Total:", total}'
 ```
-remove lines 2-7975 in a file (this writes the file, backup or skip the -i option and redirect to new file)
+* remove lines 2-7975 in a file (this writes the file, backup or skip the -i option and redirect to new file)
 ```
 sed -i 2,7975 filename
 ```
+* Find the top 20 largest directories:
+```sudo du -ah / | sort -rh | head -n 20```
+* largest files
+```sudo find / -type f -exec du -sh {} \; |sort -h|tail -20
+```
+* backup a disk
+```tar -cvpzf backup.tar.gz --exclude=/backup.tar.gz --one-file-system / ```
 * find files modifed in past 2 days:
 ```
 find . -mtime -2 -type f

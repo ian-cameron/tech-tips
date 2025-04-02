@@ -1,0 +1,56 @@
+bundle add importmap-rails
+rails importmap:install
+
+This adds the boilerplate for import maps.  It will add <%= javascript_importmap_tags %> to the Application layout <head>
+when that rendered it includes <script type="module">import "application"</script> by default, plus anything else you pin into
+the file /config/importmap.rb.
+
+To support old browsers, you can shim in above the importmap_tags:
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.8.2/dist/es-module-shims.js"></script>
+
+The install adds an app/javascript path to sprokets manifest.json.  Remove the old path of /assets/javascripts to avoid problems.
+
+In rails 7.1 you can add pins to the importmap with:
+
+./bin/importmap jquery
+
+and it will download a module from jspm.org by default, and save it to /vendor/javascript/ and add it to your importmap.rb, but actually won't work! 
+The ones that come from jspm.org are ESM-ified, but if you instead get from https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.js for example it will work.
+
+But to use it you reference it from the entry point which is /app/javascript/application.js:
+import "jquery"
+
+For existing things to work, they need to be ESM compatible, meaning exported functions.
+For old libraries, they might not be, check on CDNs for versions you can use.
+
+pin_all_from 'app/javascript/src', under: 'src'
+would make any file in ./src available to pin.
+
+JQuery Support:
+For old school stuff that has inline <script> tags that use $.JQuery, there is a problem that they run before the importmaps.  So 
+jQuery will not be available to them.  There is a workaround though:
+
+in application.js you set a variable:
+window.importmapScriptsLoaded = true;
+
+Then wait for that variable in your script tags on the page:
+
+<script type="text/javascript">
+	// Guard against double DOM loads
+  	var codeExecuted = false;
+  	document.addEventListener('DOMContentLoaded', function(e) {
+  	// Check if importmap stuff exisits without throwing an error.
+  	// Then run main code w/ guard against multiple executions.
+	if ("importmapScriptsLoaded" in window) { 
+	    if (!codeExecuted) {
+            // Do your stuff
+	   		$("#your-stuff")
+            ...
+		}
+		codeExecuted = true; 
+		} 
+	});
+</script>
+
+
+delete /config/webpack/*    

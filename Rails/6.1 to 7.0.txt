@@ -9,14 +9,18 @@ if it failes try:
 then
 rvm install 3.2.2
 
-bundle update
-
-gem 'rails', '~> 7.0' 
+gem 'rails', '~> 7.0.0' 
 bundle update rails
 
 rails app:update
 
-remove activestorage migrations if you aren't using it.
+if you get an error about `uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger (NameError)`
+add to config/boot.rb:
+  require "logger"
+
+remove activestorage migrations if you aren't using it, or run migrations.
+
+formtastic gem ~> 4.0 needed then run rails g formtastic:install (For ruby > 2.7)
 
 add gem 'puma' if you dont have a devserver
 

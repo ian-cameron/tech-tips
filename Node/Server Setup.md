@@ -7,9 +7,12 @@ sudo apt-get update
 sudo apt-get install -y curl apt-transport-https ca-certificates
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs build-essential
-sudo apt-get install -y nodejs build-essential
 ````
-
+Update node official: 
+````
+curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -`
+sudo apt-get install nodejs -y
+````
 
 2) Install nginx
 ````

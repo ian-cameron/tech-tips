@@ -1,0 +1,63 @@
+Say you have a production site with attachments in active storage.  Now you want to have a copy of those for a staging site.  Here is a way to transfer files from production to storage:
+
+
+1. Add a staging service to your storage.yml eg)
+
+staging:
+  service: AzureStorage
+  storage_account_name: azstorage
+  storage_access_key: <%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>
+  container: mydata-staging
+
+2. Create a file under lib/tasks called eg) activestorage_to_staging_clone.rake:
+
+namespace :active_storage do
+    desc "Copy all ActiveStorage blobs from the primary service to the staging service and update service_name, skipping existing blobs"
+    task copy_blobs_to_staging: :environment do
+      puts "Starting blob copy from primary to staging service and updating service_name..."
+  
+      # Get the primary and staging services from ActiveStorage configuration
+      primary_service = ActiveStorage::Blob.service
+      staging_service = ActiveStorage::Blob.services.fetch(:staging)
+  
+      # Iterate over all blobs
+      ActiveStorage::Blob.find_each do |blob|
+        begin
+          # Skip if blob is already associated with the staging service
+          next if blob.service_name == "staging"
+  
+          # Check if the blob already exists in the staging service
+          if staging_service.exist?(blob.key)
+            puts "Blob #{blob.key} already exists in staging, updating service_name only"
+            blob.update!(service_name: "staging")
+            next
+          end
+  
+          # Download the blob's data from the primary service
+          blob_data = primary_service.download(blob.key)
+  
+          # Upload the data to the staging service
+          staging_service.upload(blob.key, blob_data, content_type: blob.content_type, metadata: blob.metadata)
+  
+          # Update the blob's service_name to point to the staging service
+          blob.update!(service_name: "staging")
+  
+          puts "Successfully copied and updated blob: #{blob.key}"
+        rescue StandardError => e
+          puts "Error processing blob #{blob.key}: #{e.message}"
+        end
+      end
+  
+      puts "Blob copy and service_name update process completed."
+    end
+  end
+
+3. clone your production database to your staging environment.
+
+4. Run the script to copy/update attachments:
+
+  rails active_storage:copy_blobs_to_staging
+
+5. Now you just have to change your primary active storage service under your envs/staging.rb file:
+
+  config.active_storage.service = :staging

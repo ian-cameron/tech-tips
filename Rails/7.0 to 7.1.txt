@@ -2,3 +2,10 @@ This one was the smoothest.
 Just add gem 'rails', '~> 7.1'
 Run `bundle update`
 Then run rails app:update
+
+Rails 7.1 no longer logs to produciton.log file in Production by default!
+check your config/environments/produciton.rb and change
+
+  config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
+  to  
+  config.logger   = ActiveSupport::TaggedLogging.logger("log/production.log")

@@ -3,8 +3,10 @@ It made things complicated for simple use cases.  After Rails 7, we can
 get away from Webpacker and use 'jsbundling-rails' gem, which could still 
 use Webpack if you needed, but for apps with only a sprinkling of JS we
 need something simple.  This is esbuild.  This will describe how to rip out
-Webpacker and simplify.  (One thing webpacker had was HOT MODULE RELOADING so
-with a plain esbuild if you edit .js you will need to do a page refresh again.)
+Webpacker and simplify.  
+
+One thing webpacker had was HOT MODULE RELOADING-
+with a plain esbuild, when you edit .js sources you will need to do a page refresh again to see changes.
 
 gem 'jsbundling-rails'
 bundle install
@@ -12,7 +14,8 @@ rails javascript:install:esbuild
 
 This creates app/assets/builds which is where bundles will live
 It also creates a ./bin/dev script which will help you run a dev server 
-to watch .js files for changes and rebundle them during development.
+to watch .js files for changes and rebundle them during development- 
+Instead of using `rails s` you can start using './bin/dev' to start the dev server
 
 It should add a build script to your package.json, such as:
 "scripts": { "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds"  }

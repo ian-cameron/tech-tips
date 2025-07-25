@@ -1,3 +1,3 @@
-Add gem 'rails', '~> 7.2.0'
+Add gem 'rails', '~> 8.0.0'
 Run `bundle update`
 Then run rails app:update

@@ -17,6 +17,12 @@ It also creates a ./bin/dev script which will help you run a dev server
 to watch .js files for changes and rebundle them during development- 
 Instead of using `rails s` you can start using './bin/dev' to start the dev server
 
+If you have an error about unable to find exec ruby, you need to run 'gem install foreman' (not add to Gemfile / bundle)
+
+You might need to add the dependecies with eg) `yarn add core-js`
+if you see any errors when running ./bin/dev
+
+
 It should add a build script to your package.json, such as:
 "scripts": { "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds"  }
 if it didn't or you skiped it, add it manually.
@@ -31,8 +37,8 @@ Change any requires() to imports:
 eg)
 require("@rails/ujs").start()
 becomes
-import Rails from “@rails/ujs”
-Rails.starts()
+import Rails from "@rails/ujs"
+Rails.start()
 
 change any import ../src/scripts.js to import ./src/scripts.js
 

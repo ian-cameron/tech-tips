@@ -1,5 +1,6 @@
 You need at least Ruby 2.7 set up.  But since Rails 8 requires > 3.2 its recommened to update to >= 3.2  (supported on Rails > 7.0.1)
 Add gem 'rails', '~> 7.1.0'
+Add gem 'puma' if you don't have it already.
 Run `bundle update`
 Then run rails app:update
 

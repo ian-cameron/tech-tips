@@ -22,6 +22,7 @@ If you have an error about unable to find exec ruby, you need to run 'gem instal
 You might need to add the dependecies with eg) `yarn add core-js`
 if you see any errors when running ./bin/dev
 
+you dont use a gem for rails-ujs anymore either, you add with yarn and import it
 
 It should add a build script to your package.json, such as:
 "scripts": { "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds"  }

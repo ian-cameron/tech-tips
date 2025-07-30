@@ -3,6 +3,8 @@ Remove some gems using the following:
 bundle remove sprockets
 bundle remove sprockets-rails
 bundle remove sass-rails
+bundle remove sassc-rails
+bundle add propshaft
 
 Delete the config/assets.rb and assets/config/manifest.js files from your project.
 
@@ -30,9 +32,15 @@ add to /config/initializers/assets.rb:
     source = File.join(formtastic_path, 'app/assets/stylesheets/formtastic.css')
     destination = Rails.root.join('app/assets/builds/')
     FileUtils.cp(source, destination)
-Then in your application.sass.scss put @use "../builds/formtastic";
+
+Then in your application.sass.scss put @use "../builds/formtastic.css";
 or if there's other CSS you require from a node package, you'd need to copy it to /assets/build for example add to package.json:
     "build:css:fontawesome": "cp -r ./node_modules/@fortawesome/fontawesome-free/webfonts ./app/assets/builds && sass ./app/assets/stylesheets/fontawesome.scss ./app/assets/builds/fontawesome.css --no-source-map --load-path=node_modules --quiet"
+
+unlike with sprockets, not all .css files are automatically bundled.  you have to @use them in application.sass.scss and in order to @use them you need to rename them to start with _underscore.scss then you can use them with:
+@use "example"  ->  will add "_example.scss" file to the bundle.  Order matters.
+
+Any .scss file that uses variables will need to @use "variables" (or whatever _file.scss you declare your variables and mixins in)
 
 To add CSS compression(minification), edit package.json and add to the build:css script "--style=compressed"
 To minify the JS bundle add --minify to the esbuild command in package.json

@@ -31,7 +31,7 @@ if it didn't or you skiped it, add it manually.
 Webpacker made you swap in  'javascript_pack_tag' but now you get to go back
 to 'javascript_include_tag'
 
-The new entry point is app/javascript/application.js, so move it and eveyrthing else over from 
+The new entry point is app/javascript/application.js, so move it and everything else over from 
 the app/javascript/packs/.
 
 Change any requires() to imports:

@@ -6,7 +6,7 @@ bundle remove sass-rails
 bundle remove sassc-rails
 bundle add propshaft
 
-Delete the config/assets.rb and assets/config/manifest.js files from your project.
+Delete the config/assets.rb and app/assets/config/manifest.js files from your project.
 
 If you are Rails < 8 you'll need to comment out any calls to config.assets, such as in environments/development.rb:
   # Suppress logger output for asset requests.
@@ -17,13 +17,13 @@ if you want to use a bundler, it is cssbundling-rails
 add gem cssbundling-rails to the Gemfile
 bundle install
 run ./bin/rails css:install:sass
-(This configures a node script in package.json to bundle and compress your sass and css stylesheets.)
+(This configures a node script in package.json to bundle and compress your sass and css stylesheets, installs foreman and bin/dev)
 Remake your /assets/stylesheet/application.saas.scss 
 change //=requires into @import for things in the tree
 You can add other files you'll see when you run
 `rake assets:reveal`
-That will show vendored css files from gems, and everything else on your asset paths.  
-To use those from a gem, if they are css files, you can directly do it with 
+That will show vendored css files from gems, and everything else on your asset paths.
+To use those from a gem, if they are css files, you can directly do it with
 eg) @import url(formtastic.css);
 however this will cause it to be a separate request, not bundled with cssbundling-rails.
 If you want to bundle in gem styles, add some rails code to copy the style from your gemset.  for example:
@@ -33,13 +33,14 @@ add to /config/initializers/assets.rb:
     destination = Rails.root.join('app/assets/builds/')
     FileUtils.cp(source, destination)
 
-Then in your application.sass.scss put @use "../builds/formtastic.css";
+Then in your application.sass.scss put @use "../builds/formtastic"; (without the css extension)
 or if there's other CSS you require from a node package, you'd need to copy it to /assets/build for example add to package.json:
     "build:css:fontawesome": "cp -r ./node_modules/@fortawesome/fontawesome-free/webfonts ./app/assets/builds && sass ./app/assets/stylesheets/fontawesome.scss ./app/assets/builds/fontawesome.css --no-source-map --load-path=node_modules --quiet"
 
 unlike with sprockets, not all .css files are automatically bundled.  you have to @use them in application.sass.scss and in order to @use them you need to rename them to start with _underscore.scss then you can use them with:
 @use "example"  ->  will add "_example.scss" file to the bundle.  Order matters.
 
+if you had files named example.css.scss you need to remove the .css part to @use them, eg) example.scss
 Any .scss file that uses variables will need to @use "variables" (or whatever _file.scss you declare your variables and mixins in)
 
 To add CSS compression(minification), edit package.json and add to the build:css script "--style=compressed"

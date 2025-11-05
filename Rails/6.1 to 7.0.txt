@@ -18,11 +18,19 @@ if you get an error about `uninitialized constant ActiveSupport::LoggerThreadSaf
 add to config/boot.rb:
   require "logger"
 
+ff you get an error about `uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger (NameError) Logger::Severity.constants.each do |severity|`
+
+gem 'concurrent-ruby', '1.3.4'
+and bundle install should fix it
+
 remove activestorage migrations if you aren't using it, or run migrations.
 
 formtastic gem ~> 4.0 needed then run rails g formtastic:install (For ruby > 2.7)
 
 add gem 'puma' if you dont have a devserver
+
+run rails db:migrate
+rails s
 
 button_to helper will use a PATCH method, if you need to preserve a post you can explicity add it:
 button_to("Do a POST", my_action_on_workshop_path(@workshop), method: :post)

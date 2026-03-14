@@ -62,3 +62,6 @@ to
 
 If you get 'LoadError: cannot load such file -- rexml/document'
 add gem 'rexml' to Gemfile.  Ruby 3+ no longer includes it by default.
+
+link_to method: and confirm: are now gone.  If you still have jquery_ujs you put them in the data: 
+<%= link_to 'Delete', post_path(@post), data: { method: :delete, confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
